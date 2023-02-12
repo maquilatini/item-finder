@@ -10,4 +10,7 @@
     <color name="purple_gray">#EFEAF2</color>
     <color name="purple_dark_gray">#9F97A3</color>
     <color name="light">#EFDFFF</color>
+    <color name="purple_background">#6A4193</color>
+    <color name="purple_light_dark">#895BB5</color>
+
 </resources>
