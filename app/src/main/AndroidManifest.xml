@@ -2,6 +2,9 @@
 <manifest package="com.maquilatini.itemfinder"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,14 +14,22 @@
         android:theme="@style/Theme.ItemFinder">
         <activity
             android:name=".view.SplashActivity"
-            android:theme="@style/Theme.ItemFinder.FullScreen"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.ItemFinder.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.CategoryActivity"/>
+
+        <activity
+            android:name=".view.home.HomeActivity"
+            android:theme="@style/Theme.ItemFinder.FullScreen" />
+
+        <activity
+            android:name=".view.listing.ListingActivity"
+            android:theme="@style/Theme.ItemFinder.FullScreen" />
+
     </application>
 
 </manifest>

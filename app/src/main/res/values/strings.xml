@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">ItemFinder</string>
+
+    <string name="search_hint">Search something</string>
+    <string name="home_welcome_title">Welcome!</string>
+    <string name="home_categories_title">Check by category…</string>
+    <string name="home_offers_title">Technology is here!</string>
+    <string name="home_offers_info">Check out our best selling category!</string>
+    <string name="home_offers_details">Explore the best sellers in smartphones, headphones, smartwatches and more…</string>
 </resources>

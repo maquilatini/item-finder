@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import com.maquilatini.itemfinder.R
 import com.maquilatini.itemfinder.databinding.ActivitySplashBinding
+import com.maquilatini.itemfinder.view.home.HomeActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -23,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
 
             override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                 if (currentId == R.id.spin) {
-                    val intent = Intent(this@SplashActivity, CategoryActivity::class.java)
+                    val intent = Intent(this@SplashActivity, HomeActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
