@@ -1,5 +1,6 @@
 package com.maquilatini.itemfinder.view.home
 
+import android.app.SearchManager.QUERY
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,6 @@ import com.maquilatini.itemfinder.databinding.ActivityHomeBinding
 import com.maquilatini.itemfinder.model.categories.CategoriesModel
 import com.maquilatini.itemfinder.utils.AR_SITE_ID
 import com.maquilatini.itemfinder.utils.CATEGORY_ID_KEY
-import com.maquilatini.itemfinder.utils.CATEGORY_NAME_KEY
 import com.maquilatini.itemfinder.utils.CELLPHONES_CATEGORY_ID
 import com.maquilatini.itemfinder.utils.REAL_ESTATE_CATEGORY_ID
 import com.maquilatini.itemfinder.utils.SERVICES_CATEGORY_ID
@@ -69,27 +69,28 @@ class HomeActivity : AppCompatActivity() {
     private fun initView() {
         binding.apply {
             discountsCard.setOnClickListener {
-                goToListing(CELLPHONES_CATEGORY_ID)
+                goToListing(categoryId = CELLPHONES_CATEGORY_ID)
             }
 
-            //realestate
+            //real estate
             featured1CategoryCard.setOnClickListener {
-                goToListing(REAL_ESTATE_CATEGORY_ID)
+                goToListing(categoryId = REAL_ESTATE_CATEGORY_ID)
             }
 
             //vehicles
             featured2CategoryCard.setOnClickListener {
-                goToListing(VEHICLES_CATEGORY_ID)
+                goToListing(categoryId = VEHICLES_CATEGORY_ID)
             }
 
             //services
             featured3CategoryCard.setOnClickListener {
-                goToListing(SERVICES_CATEGORY_ID)
+                goToListing(categoryId = SERVICES_CATEGORY_ID)
             }
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    // TODO go listing
+                    clearSearchView()
+                    goToListing(query = query)
                     return true
                 }
 
@@ -112,7 +113,7 @@ class HomeActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter =
                 CategoryAdapter(categories) { category ->
-                    goToListing(category.id, category.name)
+                    goToListing(categoryId = category.id)
                 }
 
             val dividerItemDecoration = DividerItemDecoration(
@@ -123,10 +124,18 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToListing(categoryId: String, categoryName: String? = null) {
+    private fun clearSearchView() {
+        binding.searchView.setQuery("", false)
+        binding.searchView.clearFocus()
+    }
+
+    private fun goToListing(categoryId: String? = null, query: String? = null) {
         val intent = Intent(this, ListingActivity::class.java)
-        intent.putExtra(CATEGORY_ID_KEY, categoryId)
-        intent.putExtra(CATEGORY_NAME_KEY, categoryName)
+        if (categoryId != null) {
+            intent.putExtra(CATEGORY_ID_KEY, categoryId)
+        } else if (query != null) {
+            intent.putExtra(QUERY, query)
+        }
         startActivity(intent)
     }
 }

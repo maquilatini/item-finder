@@ -7,4 +7,6 @@
     <string name="home_offers_title">Technology is here!</string>
     <string name="home_offers_info">Check out our best selling category!</string>
     <string name="home_offers_details">Explore the best sellers in smartphones, headphones, smartwatches and more…</string>
+
+    <string name="listing_item_price">%s %s</string>
 </resources>
