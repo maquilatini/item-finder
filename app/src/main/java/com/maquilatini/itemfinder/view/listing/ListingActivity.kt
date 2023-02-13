@@ -1,6 +1,7 @@
 package com.maquilatini.itemfinder.view.listing
 
 import android.app.SearchManager.QUERY
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -11,8 +12,10 @@ import com.maquilatini.itemfinder.api.service.listing.ListingService
 import com.maquilatini.itemfinder.databinding.ActivityListingBinding
 import com.maquilatini.itemfinder.model.listing.ListingModel
 import com.maquilatini.itemfinder.utils.CATEGORY_ID_KEY
+import com.maquilatini.itemfinder.utils.ITEM_ID_KEY
 import com.maquilatini.itemfinder.utils.toGone
 import com.maquilatini.itemfinder.utils.toVisible
+import com.maquilatini.itemfinder.view.item.ItemDetailActivity
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
@@ -94,7 +97,7 @@ class ListingActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@ListingActivity)
             adapter =
                 ListingAdapter(this@ListingActivity, listingViewModel.getItems()) { itemId ->
-                    //goToItemDetail(itemId)
+                    goToItemDetail(itemId)
                 }
 
             val dividerItemDecoration = DividerItemDecoration(
@@ -113,5 +116,11 @@ class ListingActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun goToItemDetail(itemId: String) {
+        val intent = Intent(this, ItemDetailActivity::class.java)
+        intent.putExtra(ITEM_ID_KEY, itemId)
+        startActivity(intent)
     }
 }

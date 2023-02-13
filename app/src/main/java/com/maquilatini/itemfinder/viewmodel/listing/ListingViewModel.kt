@@ -52,6 +52,9 @@ class ListingViewModel(private val model: IListingModel) : ViewModel(),
                     _listingLiveData.value = ErrorResponse(result.code, result.message)
                     searchInProgress = false
                 }
+                is ApiResponse.NetworkError -> {
+                    // TODO
+                }
             }
             loadMore = true
         }

@@ -10,7 +10,7 @@ object CurrencyUtils {
     private const val USD_SYMBOL = "U\$D"
 
     //Returns the symbol of a currency id
-    fun getCurrencySymbol(currencyId: String): String {
-        return if (currencyId == ARS) ARS_SYMBOL else USD_SYMBOL
+    fun getCurrencySymbol(currencyId: String?): String {
+        return if (currencyId == ARS || currencyId == null) ARS_SYMBOL else USD_SYMBOL
     }
 }

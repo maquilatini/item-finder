@@ -1,7 +1,7 @@
 package com.maquilatini.itemfinder.api.model
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 /**
  * Data class to represent a search result.

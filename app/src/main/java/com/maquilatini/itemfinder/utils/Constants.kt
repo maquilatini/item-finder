@@ -1,6 +1,7 @@
 package com.maquilatini.itemfinder.utils
 
 const val CATEGORY_ID_KEY = "CATEGORY_ID"
+const val ITEM_ID_KEY = "ITEM_ID"
 const val AR_SITE_ID = "MLA"
 const val CELLPHONES_CATEGORY_ID = "MLA1051"
 const val REAL_ESTATE_CATEGORY_ID = "MLA1459"

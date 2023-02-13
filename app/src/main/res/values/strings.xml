@@ -9,4 +9,8 @@
     <string name="home_offers_details">Explore the best sellers in smartphones, headphones, smartwatches and more…</string>
 
     <string name="listing_item_price">%s %s</string>
+    <string name="listing_no_price">Price not specified</string>
+
+    <string name="item_description">Description:</string>
+    <string name="item_no_description">Description not specified</string>
 </resources>

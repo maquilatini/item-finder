@@ -31,6 +31,9 @@ class CategoriesViewModel(private val model: ICategoriesModel) : ViewModel(), IC
                     _categoriesLiveData.value = ErrorResponse(result.code, result.message)
                     categories = emptyList()
                 }
+                is ApiResponse.NetworkError -> {
+                    // TODO
+                }
             }
         }
     }

@@ -10,6 +10,8 @@ import com.maquilatini.itemfinder.api.model.Item
 import com.maquilatini.itemfinder.databinding.ItemListingLayoutBinding
 import com.maquilatini.itemfinder.utils.CurrencyUtils
 import com.maquilatini.itemfinder.utils.NumberUtils.getFormattedPrice
+import com.maquilatini.itemfinder.utils.toGone
+import com.maquilatini.itemfinder.utils.toVisible
 
 class ListingAdapter(
     private val context: Context,
@@ -33,12 +35,22 @@ class ListingAdapter(
         val item = itemsList[position]
         holder.apply {
             binding.titleText.text = item.title
-            binding.priceText.text = context.getString(
-                R.string.listing_item_price,
-                CurrencyUtils.getCurrencySymbol(item.currency_id),
-                item.price.getFormattedPrice()
-            )
-            binding.conditionText.text = item.condition
+            if (item.condition != null) {
+                binding.conditionText.text = item.condition
+                binding.conditionText.toVisible()
+            } else {
+                binding.conditionText.toGone()
+            }
+
+            if (item.price != null) {
+                binding.priceText.text = context.getString(
+                    R.string.listing_item_price,
+                    CurrencyUtils.getCurrencySymbol(item.currency_id),
+                    item.price.getFormattedPrice()
+                )
+            } else {
+                binding.priceText.text = context.getString(R.string.listing_no_price)
+            }
 
             Glide.with(holder.itemView.context).load(item.thumbnail).centerInside()
                 .error(R.drawable.ic_no_photo)
