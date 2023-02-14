@@ -8,6 +8,7 @@ import com.maquilatini.itemfinder.api.ApiResponse
 import com.maquilatini.itemfinder.api.model.ItemDescription
 import com.maquilatini.itemfinder.api.model.ItemDetail
 import com.maquilatini.itemfinder.model.item.IItemDetailModel
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
@@ -39,7 +40,7 @@ class ItemDetailViewModel(private val model: IItemDetailModel) : ViewModel(),
                     _itemDetailLiveData.value = ErrorResponse(result.code, result.message)
                 }
                 is ApiResponse.NetworkError -> {
-                    // TODO
+                    _itemDetailLiveData.value = DeviceOffline(message = result.message)
                 }
             }
         }
@@ -57,7 +58,7 @@ class ItemDetailViewModel(private val model: IItemDetailModel) : ViewModel(),
                     _itemDescriptionLiveData.value = ErrorResponse(result.code, result.message)
                 }
                 is ApiResponse.NetworkError -> {
-                    // TODO
+                    _itemDescriptionLiveData.value = DeviceOffline(message = result.message)
                 }
             }
         }

@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.maquilatini.itemfinder.R
 import com.maquilatini.itemfinder.api.model.Category
 import com.maquilatini.itemfinder.api.service.categories.CategoriesService
 import com.maquilatini.itemfinder.databinding.ActivityHomeBinding
+import com.maquilatini.itemfinder.databinding.ErrorLayoutBinding
 import com.maquilatini.itemfinder.model.categories.CategoriesModel
 import com.maquilatini.itemfinder.utils.AR_SITE_ID
 import com.maquilatini.itemfinder.utils.CATEGORY_ID_KEY
@@ -20,18 +22,20 @@ import com.maquilatini.itemfinder.utils.VEHICLES_CATEGORY_ID
 import com.maquilatini.itemfinder.utils.toGone
 import com.maquilatini.itemfinder.utils.toVisible
 import com.maquilatini.itemfinder.view.listing.ListingActivity
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
 import com.maquilatini.itemfinder.viewmodel.getViewModel
-import com.maquilatini.itemfinder.viewmodel.home.CategoriesViewModel
+import com.maquilatini.itemfinder.viewmodel.home.HomeViewModel
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private val categoriesViewModel: CategoriesViewModel by lazy {
+    private lateinit var bindingStub: ErrorLayoutBinding
+    private val homeViewModel: HomeViewModel by lazy {
         getViewModel {
-            CategoriesViewModel(
+            HomeViewModel(
                 CategoriesModel(
                     CategoriesService()
                 )
@@ -43,9 +47,10 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         val view = binding.root
+        binding.homeStub.setOnInflateListener { _, inflated -> bindingStub = ErrorLayoutBinding.bind(inflated) }
         setContentView(view)
 
-        categoriesViewModel.categoriesLiveData.observe(this) { response ->
+        homeViewModel.categoriesLiveData.observe(this) { response ->
             when (response) {
                 is Loading -> {
                     binding.progressBarCategories.toVisible()
@@ -56,9 +61,10 @@ class HomeActivity : AppCompatActivity() {
                     loadCategories(response.data)
                 }
                 is ErrorResponse -> {
-                    binding.progressBarCategories.toGone()
-                    binding.categoriesRecyclerView.toGone()
-                    // TODO complete error message
+                    handleError(getString(R.string.home_error_message))
+                }
+                is DeviceOffline -> {
+                    handleError(getString(R.string.home_error_connection))
                 }
             }
         }
@@ -101,10 +107,10 @@ class HomeActivity : AppCompatActivity() {
             })
         }
 
-        if (categoriesViewModel.getCategories().isEmpty()) {
-            categoriesViewModel.getCategories(AR_SITE_ID)
+        if (homeViewModel.getLoadedCategories().isEmpty()) {
+            homeViewModel.getCategories(AR_SITE_ID)
         } else {
-            loadCategories(categoriesViewModel.getCategories())
+            loadCategories(homeViewModel.getLoadedCategories())
         }
     }
 
@@ -137,5 +143,13 @@ class HomeActivity : AppCompatActivity() {
             intent.putExtra(QUERY, query)
         }
         startActivity(intent)
+    }
+
+    private fun handleError(errorMessage: String) {
+        binding.progressBarCategories.toGone()
+        binding.categoriesRecyclerView.toGone()
+        binding.categoriesText.toGone()
+        binding.homeStub.inflate()
+        bindingStub.errorTitleText.text = errorMessage
     }
 }

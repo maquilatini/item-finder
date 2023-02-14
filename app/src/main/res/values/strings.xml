@@ -12,5 +12,13 @@
     <string name="listing_no_price">Price not specified</string>
 
     <string name="item_description">Description:</string>
-    <string name="item_no_description">Description not specified</string>
+    <string name="item_no_description">We couldn\'t load the description. Try again later.</string>
+    <string name="item_detail_title">Item Detail</string>
+
+    <!-- Error Handling -->
+    <string name="home_error_message">The categories could not be loaded. Please try again later.</string>
+    <string name="home_error_connection">The categories could not be loaded. Please check your network connection and try again.</string>
+    <string name="listing_empty_results">We did not find results for your search. Try again with different search terms, or explore our categories.</string>
+    <string name="listing_error_message">Oops, something went wrong. Please try again later.</string>
+    <string name="listing_error_connection">Check your network connection and try again later.</string>
 </resources>

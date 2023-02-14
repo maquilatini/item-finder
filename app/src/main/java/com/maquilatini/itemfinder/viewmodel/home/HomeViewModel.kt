@@ -7,13 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.maquilatini.itemfinder.api.ApiResponse
 import com.maquilatini.itemfinder.api.model.Category
 import com.maquilatini.itemfinder.model.categories.ICategoriesModel
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
 import com.maquilatini.itemfinder.viewmodel.ViewModelResponse
 import kotlinx.coroutines.launch
 
-class CategoriesViewModel(private val model: ICategoriesModel) : ViewModel(), ICategoriesViewModel {
+class HomeViewModel(private val model: ICategoriesModel) : ViewModel(), IHomeViewModel {
 
     private var categories: List<Category> = emptyList()
     private val _categoriesLiveData: MutableLiveData<ViewModelResponse<List<Category>>> = MutableLiveData()
@@ -32,13 +33,14 @@ class CategoriesViewModel(private val model: ICategoriesModel) : ViewModel(), IC
                     categories = emptyList()
                 }
                 is ApiResponse.NetworkError -> {
-                    // TODO
+                    _categoriesLiveData.value = DeviceOffline(message = result.message)
+                    categories = emptyList()
                 }
             }
         }
     }
 
-    fun getCategories(): List<Category> {
+    fun getLoadedCategories(): List<Category> {
         return categories
     }
 }

@@ -3,19 +3,23 @@ package com.maquilatini.itemfinder.view.listing
 import android.app.SearchManager.QUERY
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.maquilatini.itemfinder.R
 import com.maquilatini.itemfinder.api.model.Listing
 import com.maquilatini.itemfinder.api.service.listing.ListingService
 import com.maquilatini.itemfinder.databinding.ActivityListingBinding
+import com.maquilatini.itemfinder.databinding.ErrorLayoutBinding
 import com.maquilatini.itemfinder.model.listing.ListingModel
 import com.maquilatini.itemfinder.utils.CATEGORY_ID_KEY
 import com.maquilatini.itemfinder.utils.ITEM_ID_KEY
 import com.maquilatini.itemfinder.utils.toGone
 import com.maquilatini.itemfinder.utils.toVisible
 import com.maquilatini.itemfinder.view.item.ItemDetailActivity
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
@@ -25,6 +29,7 @@ import com.maquilatini.itemfinder.viewmodel.listing.ListingViewModel
 class ListingActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityListingBinding
+    private lateinit var bindingStub: ErrorLayoutBinding
 
     private val listingViewModel: ListingViewModel by lazy {
         getViewModel {
@@ -45,6 +50,7 @@ class ListingActivity : AppCompatActivity() {
 
         binding = ActivityListingBinding.inflate(layoutInflater)
         val view = binding.root
+        binding.listingStub.setOnInflateListener { _, inflated -> bindingStub = ErrorLayoutBinding.bind(inflated) }
         setContentView(view)
 
         if (!listingViewModel.isSearchInProgress()) {
@@ -63,14 +69,13 @@ class ListingActivity : AppCompatActivity() {
                     binding.progressBarListing.toVisible()
                 }
                 is SuccessResponse -> {
-                    binding.progressBarListing.toGone()
-                    binding.listingRecyclerView.toVisible()
                     loadItems(response.data)
                 }
                 is ErrorResponse -> {
-                    binding.progressBarListing.toGone()
-                    binding.listingRecyclerView.toGone()
-                    // TODO complete error message
+                    handleError(getString(R.string.listing_error_message))
+                }
+                is DeviceOffline -> {
+                    handleError(getString(R.string.listing_error_connection))
                 }
             }
         }
@@ -86,10 +91,6 @@ class ListingActivity : AppCompatActivity() {
     private fun searchByCategory(categoryId: String) {
         listingViewModel.setSearchByQuery(false)
         listingViewModel.search(categoryId = categoryId)
-    }
-
-    private fun loadItems(listing: Listing) {
-        (binding.listingRecyclerView.adapter as ListingAdapter).addItems(listing.results)
     }
 
     private fun initView() {
@@ -116,6 +117,32 @@ class ListingActivity : AppCompatActivity() {
                 }
             })
         }
+    }
+
+    private fun loadItems(listing: Listing) {
+        binding.progressBarListing.toGone()
+        if (listingViewModel.getItems().isEmpty() && listing.results.isEmpty()) {
+            showError(getString(R.string.listing_empty_results), R.drawable.ic_empty_response)
+        } else {
+            binding.listingRecyclerView.toVisible()
+            (binding.listingRecyclerView.adapter as ListingAdapter).addItems(listing.results)
+        }
+    }
+
+    private fun handleError(message: String) {
+        binding.progressBarListing.toGone()
+        if (listingViewModel.getItems().isEmpty()) {
+            binding.listingRecyclerView.toGone()
+            showError(message, R.drawable.ic_error)
+        } else {
+            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showError(message: String, resId: Int) {
+        binding.listingStub.inflate()
+        bindingStub.errorTitleText.text = message
+        bindingStub.errorImageView.setImageResource(resId)
     }
 
     private fun goToItemDetail(itemId: String) {

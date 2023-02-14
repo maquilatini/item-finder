@@ -8,6 +8,7 @@ import com.maquilatini.itemfinder.api.ApiResponse
 import com.maquilatini.itemfinder.api.model.Item
 import com.maquilatini.itemfinder.api.model.Listing
 import com.maquilatini.itemfinder.model.listing.IListingModel
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
@@ -47,13 +48,13 @@ class ListingViewModel(private val model: IListingModel) : ViewModel(),
                         limit = this.paging.limit
                     }
                 }
-
                 is ApiResponse.Error -> {
                     _listingLiveData.value = ErrorResponse(result.code, result.message)
                     searchInProgress = false
                 }
                 is ApiResponse.NetworkError -> {
-                    // TODO
+                    _listingLiveData.value = DeviceOffline(message = result.message)
+                    searchInProgress = false
                 }
             }
             loadMore = true

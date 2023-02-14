@@ -15,6 +15,7 @@ import com.maquilatini.itemfinder.utils.ITEM_ID_KEY
 import com.maquilatini.itemfinder.utils.NumberUtils.getFormattedPrice
 import com.maquilatini.itemfinder.utils.toGone
 import com.maquilatini.itemfinder.utils.toVisible
+import com.maquilatini.itemfinder.viewmodel.DeviceOffline
 import com.maquilatini.itemfinder.viewmodel.ErrorResponse
 import com.maquilatini.itemfinder.viewmodel.Loading
 import com.maquilatini.itemfinder.viewmodel.SuccessResponse
@@ -34,16 +35,18 @@ class ItemDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        supportActionBar?.title = "Item Detail"
+        supportActionBar?.title = getString(R.string.item_detail_title)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding = ActivityItemDetailBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        if (intent.hasExtra(ITEM_ID_KEY)) {
-            intent.getStringExtra(ITEM_ID_KEY)?.let { itemId ->
-                itemDetailViewModel.getItemDetail(itemId)
-                itemDetailViewModel.getItemDescription(itemId)
+        if (itemDetailViewModel.itemDetailLiveData.value == null) {
+            if (intent.hasExtra(ITEM_ID_KEY)) {
+                intent.getStringExtra(ITEM_ID_KEY)?.let { itemId ->
+                    itemDetailViewModel.getItemDetail(itemId)
+                    itemDetailViewModel.getItemDescription(itemId)
+                }
             }
         }
 
@@ -53,12 +56,13 @@ class ItemDetailActivity : AppCompatActivity() {
                     binding.progressBarItemDetail.toVisible()
                 }
                 is SuccessResponse -> {
-                    binding.progressBarItemDetail.toGone()
                     setItemDetail(response.data)
                 }
                 is ErrorResponse -> {
-                    binding.progressBarItemDetail.toGone()
-                    // TODO complete error message
+                    handleError(getString(R.string.listing_error_message))
+                }
+                is DeviceOffline -> {
+                    handleError(getString(R.string.listing_error_connection))
                 }
             }
         }
@@ -66,20 +70,24 @@ class ItemDetailActivity : AppCompatActivity() {
         itemDetailViewModel.itemDescriptionLiveData.observe(this) { response ->
             when (response) {
                 is Loading -> {
+
                 }
                 is SuccessResponse -> {
                     setItemDescription(response.data.plain_text)
                 }
-                is ErrorResponse -> {
-                    setItemDescription(getString(R.string.item_no_description))
+                else -> {
+                    binding.itemDescriptionText.toGone()
+                    binding.itemDescriptionValueText.toGone()
                 }
             }
         }
     }
 
     private fun setItemDetail(itemDetail: ItemDetail) {
+        binding.progressBarItemDetail.toGone()
         binding.itemTitleText.text = itemDetail.title
         binding.imageSeparator.toVisible()
+        binding.itemPriceText.toVisible()
 
         if (itemDetail.price != null) {
             binding.itemPriceText.text = getString(
@@ -110,6 +118,13 @@ class ItemDetailActivity : AppCompatActivity() {
         binding.itemDescriptionValueText.toVisible()
         binding.descriptionSeparator.toVisible()
         binding.itemDescriptionText.toVisible()
+    }
+
+    private fun handleError(message: String) {
+        binding.progressBarItemDetail.toGone()
+        binding.imageSeparator.toVisible()
+        binding.itemImageView.setImageResource(R.drawable.ic_no_photo)
+        binding.itemTitleText.text = message
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

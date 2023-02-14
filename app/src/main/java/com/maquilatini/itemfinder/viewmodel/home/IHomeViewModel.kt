@@ -7,7 +7,7 @@ import com.maquilatini.itemfinder.viewmodel.ViewModelResponse
 /**
  * Categories View Model Interface.
  */
-interface ICategoriesViewModel {
+interface IHomeViewModel {
     val categoriesLiveData: LiveData<ViewModelResponse<List<Category>>>
     fun getCategories(siteId: String)
 }

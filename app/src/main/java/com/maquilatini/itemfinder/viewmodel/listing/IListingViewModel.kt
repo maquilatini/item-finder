@@ -9,5 +9,5 @@ import com.maquilatini.itemfinder.viewmodel.ViewModelResponse
  */
 interface IListingViewModel {
     val listingLiveData: LiveData<ViewModelResponse<Listing>>
-    fun search(query: String? = null, categoryId: String? = null, offset: Int? = 0)
+    fun search(query: String? = null, categoryId: String? = null, currentOffset: Int? = 0)
 }
