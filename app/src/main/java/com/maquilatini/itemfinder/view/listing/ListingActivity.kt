@@ -56,10 +56,10 @@ class ListingActivity : AppCompatActivity() {
         if (!listingViewModel.isSearchInProgress()) {
             if (intent.hasExtra(QUERY)) {
                 intent.getStringExtra(QUERY)?.let { query ->
-                    search(query)
+                    listingViewModel.search(query = query)
                 }
             } else if (intent.hasExtra(CATEGORY_ID_KEY)) {
-                intent.getStringExtra(CATEGORY_ID_KEY)?.let { searchByCategory(it) }
+                intent.getStringExtra(CATEGORY_ID_KEY)?.let { listingViewModel.search(categoryId = it) }
             }
         }
 
@@ -81,16 +81,6 @@ class ListingActivity : AppCompatActivity() {
         }
 
         initView()
-    }
-
-    private fun search(query: String) {
-        listingViewModel.setSearchByQuery(true)
-        listingViewModel.search(query = query)
-    }
-
-    private fun searchByCategory(categoryId: String) {
-        listingViewModel.setSearchByQuery(false)
-        listingViewModel.search(categoryId = categoryId)
     }
 
     private fun initView() {

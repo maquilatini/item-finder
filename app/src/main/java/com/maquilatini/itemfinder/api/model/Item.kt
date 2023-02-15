@@ -15,7 +15,6 @@ data class Item(
     val currency_id: String?,
     val condition: String?,
     val thumbnail: String,
-    val attributes: List<Attribute>
 ): Parcelable
 
 @Parcelize

@@ -33,7 +33,7 @@ class ListingViewModel(private val model: IListingModel) : ViewModel(),
     override fun search(query: String?, categoryId: String?, currentOffset: Int?) {
         viewModelScope.launch {
             _listingLiveData.postValue(Loading(true))
-
+            searchByQuery = query != null
             loadMore = false
             lastQuery = query
             lastCategory = categoryId
@@ -75,10 +75,6 @@ class ListingViewModel(private val model: IListingModel) : ViewModel(),
 
     fun isSearchInProgress(): Boolean {
         return searchInProgress
-    }
-
-    fun setSearchByQuery(isByQuery: Boolean) {
-        searchByQuery = isByQuery
     }
 
     fun getItems(): MutableList<Item> {

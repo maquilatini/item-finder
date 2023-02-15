@@ -5,12 +5,8 @@ package com.maquilatini.itemfinder.utils
  */
 object CurrencyUtils {
 
-    private const val ARS = "ARS"
-    private const val ARS_SYMBOL = "$"
-    private const val USD_SYMBOL = "U\$D"
-
     //Returns the symbol of a currency id
     fun getCurrencySymbol(currencyId: String?): String {
-        return if (currencyId == ARS || currencyId == null) ARS_SYMBOL else USD_SYMBOL
+        return if (currencyId == USD) USD_SYMBOL else ARS_SYMBOL
     }
 }
